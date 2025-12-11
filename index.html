@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interview Practice Tool</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1d2675;
+        color: white;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+    h1, h2 {
+        color: #ffff00;
+    }
+    .container {
+        margin: 50px auto;
+        width: 80%;
+    }
+    button {
+        background-color: #ffff00;
+        color: black;
+        border: none;
+        padding: 12px 24px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    button:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+    #question-box, #answer-box {
+        background-color: #2a3698;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 5px;
+        border: 2px solid #000;
+        width: 80%;
+        font-size: 20px;
+    }
+    #answer-box {
+        display: none;
+        color: #ffff5f;
+    }
+</style>
+</head>
+<body>
+<div class="container" id="home-page">
+    <h1>Welcome to the Interview Practice Tool!</h1>
+    <h2>Select a Role:</h2>
+    <button onclick="startRole('IT Support Analyst')">IT Support Analyst</button>
+    <button onclick="startRole('Junior QA Analyst')">Junior QA Analyst</button>
+    <button onclick="startRole('Junior Cybersecurity Analyst')">Junior Cybersecurity Analyst</button>
+    <button onclick="startRole('Junior Data Analyst')">Junior Data Analyst</button>
+    <button onclick="startRole('Junior Software Developer')">Junior Software Developer</button>
+</div>
+
+<div class="container" id="practice-page" style="display:none;">
+    <h2 id="role-title"></h2>
+    <div id="question-box"></div>
+    <div id="answer-box"></div>
+    <button id="reveal-btn" onclick="revealAnswer()">Reveal Answer</button>
+    <button onclick="nextQuestion()">Next Question</button>
+    <button onclick="goHome()">Home</button>
+</div>
+
+<script>
+const questionsBank = {
+    "IT Support Analyst": [
+        {q: "A user cannot connect to Wi-Fi. How would you troubleshoot?", a: "Check if Wi-Fi is enabled, verify SSID and password, ping router, check IP conflicts, and ensure drivers are up to date."},
+        {q: "A user's computer is running very slowly. How would you troubleshoot?", a: "Check Task Manager for high CPU/memory usage, disk space, malware, updates, and consider rebooting."},
+        {q: "A user cannot print to a network printer. What steps would you take?", a: "Verify printer is online, check default printer, network connectivity, printer spooler, and permissions."},
+        {q: "A laptop fails to boot properly. How would you troubleshoot?", a: "Check for error messages, safe mode, peripherals, BIOS settings, and run diagnostics."},
+        {q: "A user frequently disconnects from Wi-Fi. How would you troubleshoot?", a: "Check signal strength, router logs, IP conflicts, drivers, and possible interference."},
+        {q: "Explain the difference between TCP and UDP.", a: "TCP is connection-oriented and reliable; UDP is connectionless and faster but unreliable."},
+        {q: "What is the purpose of Active Directory?", a: "To manage users, computers, and permissions in a network with centralized authentication."},
+        {q: "Explain the difference between static and dynamic IP addresses.", a: "Static IP is manually set and constant; dynamic IP is assigned by DHCP and can change."},
+        {q: "A user cannot access a shared folder. How do you resolve it?", a: "Check network connectivity, permissions, folder existence, and drive mapping."},
+        {q: "What is the difference between a domain and a workgroup?", a: "A domain has centralized management with a server; a workgroup is peer-to-peer with no central control."},
+        {q: "Explain what a VPN is and why it is used.", a: "A VPN creates a secure, encrypted connection over the internet, often to access a corporate network remotely."},
+        {q: "How would you troubleshoot a frozen application?", a: "Use Task Manager to end process, check for updates, restart the app, and investigate logs."},
+        {q: "Explain the difference between a hub, switch, and router.", a: "Hub broadcasts to all ports, switch sends to specific devices, router connects networks and directs traffic."},
+        {q: "A user reports error 'Access Denied'. How would you fix it?", a: "Check user permissions, file/folder ownership, and network share settings."},
+        {q: "Explain what DNS is and why it’s important.", a: "DNS translates domain names into IP addresses, allowing devices to locate websites/services."},
+        {q: "A device cannot get an IP address. How would you troubleshoot?", a: "Check DHCP server, network connectivity, NIC settings, and release/renew IP."},
+        {q: "Explain what a driver is and why it's important.", a: "A driver is software that allows hardware to communicate with the OS; missing drivers can cause malfunction."},
+        {q: "How would you troubleshoot a blue screen of death?", a: "Check recent software/hardware changes, analyze error codes, run hardware diagnostics, update drivers."},
+        {q: "A user cannot log into Windows. What steps do you take?", a: "Verify credentials, check domain/network connection, reset password if necessary, and check account status."},
+        {q: "Explain the difference between IPv4 and IPv6.", a: "IPv4 uses 32-bit addresses; IPv6 uses 128-bit addresses for more available IPs."}
+    ],
+    "Junior QA Analyst": [
+        {q: "Explain the difference between functional and non-functional testing.", a: "Functional tests check what the system does; non-functional tests check how well it performs (e.g., speed, usability)."},
+        {q: "What is regression testing and why is it important?", a: "Regression testing ensures that recent code changes did not break existing functionality."},
+        {q: "A feature works in Chrome but fails in Firefox. What do you do?", a: "Check cross-browser compatibility, inspect errors in developer tools, and adjust code to be compatible."},
+        {q: "What is the difference between verification and validation?", a: "Verification ensures the product is built correctly; validation ensures the right product is built."},
+        {q: "How do you prioritize test cases for a new feature?", a: "Focus on critical functionality, high-risk areas, and most-used features first."},
+        {q: "Explain the difference between smoke testing and sanity testing.", a: "Smoke testing is broad, shallow testing to check basic functionality; sanity testing is narrow, deep testing on specific areas."},
+        {q: "How would you test a login page?", a: "Check valid and invalid credentials, password limits, field validation, error messages, and security checks."},
+        {q: "Explain what a bug lifecycle is.", a: "The lifecycle includes New, Assigned, Open, Fixed, Retest, Verified, Closed, and possibly Reopened."},
+        {q: "A user reports a crash when submitting a form. How would you reproduce it?", a: "Gather exact steps, environment, data, and browser details to reproduce the issue consistently."},
+        {q: "What is exploratory testing?", a: "Testing without predefined cases, relying on tester’s knowledge to find issues creatively."},
+        {q: "Explain the difference between severity and priority in bug tracking.", a: "Severity is the impact of a bug; priority is the order in which it should be fixed."},
+        {q: "What is a test plan?", a: "A document outlining scope, objectives, resources, schedule, and approach for testing."},
+        {q: "How would you test a search feature?", a: "Test valid/invalid inputs, case sensitivity, special characters, result accuracy, and response time."},
+        {q: "Explain what boundary testing is.", a: "Testing input values at, just below, and just above boundaries to catch edge-case errors."},
+        {q: "A test case fails, but the feature works for other users. What do you do?", a: "Check environment, data, browser/device differences, and reproduce steps carefully."},
+        {q: "What is a test scenario?", a: "A high-level description of functionality to be tested, often covering multiple test cases."},
+        {q: "How do you test an API endpoint?", a: "Check HTTP methods, input/output data, status codes, error handling, and performance."},
+        {q: "Explain what UAT is.", a: "User Acceptance Testing ensures the product meets user requirements and expectations."},
+        {q: "What is the difference between black-box and white-box testing?", a: "Black-box tests functionality without knowing internal code; white-box tests internal logic/structure."},
+        {q: "How do you report a bug effectively?", a: "Include clear steps to reproduce, expected vs actual results, environment details, screenshots/logs, and severity."}
+    ],
+    "Junior Cybersecurity Analyst": [
+        {q: "You notice an unusual login attempt from an unknown IP. What steps do you take?", a: "Check if login was successful, notify user, reset password, review logs, enable MFA, report to security team."},
+        {q: "A user reports a phishing email. How do you respond?", a: "Verify email, warn other users, block sender, update filters, educate the user."},
+        {q: "A vulnerability scan reports outdated software. What actions do you take?", a: "Validate scan, prioritize patches, schedule updates, test in non-prod, monitor after patching."},
+        {q: "A USB device is found in a secure area. What steps do you take?", a: "Quarantine device, do not plug in, investigate source, scan in sandbox, report to IT/security."},
+        {q: "You notice abnormal outgoing traffic from a workstation. How do you investigate?", a: "Capture network logs, identify process, check for malware, isolate workstation, remediate compromise."},
+        {q: "Explain the difference between symmetric and asymmetric encryption.", a: "Symmetric uses the same key to encrypt/decrypt; asymmetric uses public key to encrypt and private key to decrypt."},
+        {q: "What is the purpose of a firewall?", a: "To monitor and control network traffic based on security rules and prevent unauthorized access."},
+        {q: "What is the difference between HTTP and HTTPS?", a: "HTTPS encrypts data using SSL/TLS; HTTP does not, making it less secure."},
+        {q: "Explain what MFA is and why it is important.", a: "Multi-factor authentication requires multiple verification steps, increasing security."},
+        {q: "A user reports their account may be compromised. How do you respond?", a: "Reset password, review recent activity, check for breaches, monitor logs, and advise user on security best practices."},
+        {q: "What is a vulnerability scan?", a: "An automated process to identify weaknesses in systems or networks."},
+        {q: "Explain the difference between a virus and malware.", a: "Malware is any malicious software; a virus is a type of malware that replicates and spreads."},
+        {q: "What steps would you take to secure a new workstation?", a: "Install updates, antivirus, configure firewall, enforce strong passwords, limit admin rights."},
+        {q: "What is social engineering?", a: "Manipulating people into revealing confidential information or performing unsafe actions."},
+        {q: "Explain the difference between a threat, vulnerability, and risk.", a: "Threat: potential danger; Vulnerability: weakness; Risk: likelihood threat exploits vulnerability."},
+        {q: "A website shows a SSL certificate warning. What could be the cause?", a: "Expired certificate, untrusted CA, domain mismatch, or insecure connection."},
+        {q: "What is the principle of least privilege?", a: "Users or programs are given only the minimum access necessary to perform their tasks."},
+        {q: "How do you respond to a ransomware attack?", a: "Isolate affected systems, do not pay ransom, restore from backups, investigate entry point, strengthen defenses."},
+        {q: "Explain what a security incident response plan is.", a: "A documented process to detect, respond to, and recover from security incidents."},
+        {q: "How would you safely handle a suspected malware email attachment?", a: "Do not open, quarantine, scan in sandbox, report to IT/security team."}
+    ],
+    "Junior Data Analyst": [
+        {q: "A dataset contains missing values in key columns. How would you handle this?", a: "Identify missing values, decide whether to remove rows, fill in missing values, or use predictive imputation."},
+        {q: "What is the difference between INNER JOIN and LEFT JOIN in SQL?", a: "INNER JOIN returns only matching rows; LEFT JOIN returns all rows from left table and matches from right table."},
+        {q: "Explain the difference between primary key and foreign key.", a: "Primary key uniquely identifies records; foreign key links to a primary key in another table."},
+        {q: "A chart shows unexpected outliers. How would you investigate?", a: "Check raw data for input errors, verify transformations, decide whether to keep or remove outliers."},
+        {q: "Explain the difference between structured and unstructured data.", a: "Structured data is organized in tables; unstructured data has no predefined format like images or emails."},
+        {q: "How would you merge two datasets with different column names?", a: "Rename columns to match, check data types, handle duplicates, and merge using SQL or Excel/Python functions."},
+        {q: "In Excel, what is the difference between VLOOKUP and INDEX-MATCH?", a: "VLOOKUP looks in the first column only; INDEX-MATCH can look in any column and is more flexible."},
+        {q: "A report shows inconsistent numbers compared to the source database. How would you troubleshoot?", a: "Verify extraction queries, check filters/formulas, confirm data freshness, reconcile differences."},
+        {q: "What is the difference between COUNT(*) and COUNT(column_name) in SQL?", a: "COUNT(*) counts all rows; COUNT(column_name) counts only non-NULL values."},
+        {q: "Explain how you would test data quality.", a: "Check for missing, duplicate, or inconsistent values, validate data against sources, and run sanity checks."},
+        {q: "How would you prioritize which data to clean first?", a: "Focus on critical business metrics, high-impact columns, and most-used datasets first."},
+        {q: "How do you handle categorical variables in analysis?", a: "Use encoding methods such as one-hot encoding or label encoding for models or analysis."},
+        {q: "Explain what a pivot table is.", a: "A pivot table summarizes and aggregates data in a table for easy analysis."},
+        {q: "A dataset is very large and slow to process. What do you do?", a: "Filter unnecessary columns, aggregate data first, use efficient queries or tools like SQL/Pandas."},
+        {q: "Explain the difference between correlation and causation.", a: "Correlation shows a relationship between variables; causation indicates one variable causes change in another."},
+        {q: "How would you detect duplicate records in a dataset?", a: "Check for repeated rows or unique key duplication using SQL DISTINCT or data cleaning functions."},
+        {q: "Explain the difference between qualitative and quantitative data.", a: "Qualitative is descriptive (text, categories); quantitative is numerical (counts, measurements)."},
+        {q: "How would you visualize categorical vs numerical data?", a: "Use bar charts, histograms, or box plots depending on the comparison."},
+        {q: "A dataset contains inconsistent date formats. How would you fix it?", a: "Convert dates to a standard format using Excel functions, SQL date functions, or Python date parsing."},
+        {q: "How do you validate data imported from a third-party source?", a: "Compare with known values, check for completeness, consistency, and expected ranges."}
+    ],
+    "Junior Software Developer": [
+        {q: "What is the difference between Python and CPython?", a: "Python is the language; CPython is the standard implementation that runs Python code."},
+        {q: "Explain the difference between == and is in Python.", a: "== checks value equality; is checks if objects reference the same memory location."},
+        {q: "What is the difference between a list, tuple, and set?", a: "List: mutable, ordered; Tuple: immutable, ordered; Set: mutable, unordered, unique elements."},
+        {q: "Explain what a Python module or package is.", a: "A module is a single Python file with code; a package is a directory containing modules and an __init__.py."},
+        {q: "What is the difference between a for loop and list comprehension?", a: "For loops iterate and can perform complex actions; list comprehension creates a new list concisely."},
+        {q: "Explain what an API is.", a: "An API is a set of rules that allows applications to communicate, often to request or send data."},
+        {q: "What is the difference between Python 2 and Python 3?", a: "Python 3 has improved syntax, print function, Unicode support; Python 2 is legacy and no longer supported."},
+        {q: "What is the difference between mutable and immutable objects?", a: "Mutable objects (list, dict) can be changed; immutable objects (tuple, string) cannot be altered."},
+        {q: "Explain what exception handling is.", a: "Using try/except blocks to catch and handle runtime errors gracefully."},
+        {q: "What is the difference between shallow and deep copy?", a: "Shallow copy copies references of objects; deep copy duplicates objects recursively."},
+        {q: "Explain what a decorator is in Python.", a: "A function that modifies another function’s behavior without changing its code."},
+        {q: "How would you test a function you wrote?", a: "Write unit tests with different inputs, check outputs, edge cases, and handle exceptions."},
+        {q: "Explain the difference between *args and **kwargs.", a: "*args passes variable positional arguments; **kwargs passes variable keyword arguments."},
+        {q: "What is the difference between a Python list and a NumPy array?", a: "NumPy arrays are optimized for numerical operations and support vectorized calculations; lists are general-purpose containers."},
+        {q: "How would you reverse a string in Python?", a: "Use slicing s[::-1] or the reversed() function with join()."},
+        {q: "Explain the difference between Python's pass by value vs pass by reference.", a: "Python uses pass by assignment; mutable objects can change in functions, immutable cannot."},
+        {q: "How would you remove duplicates from a list?", a: "Convert to a set and back to list, or use dict.fromkeys(), or loop with conditionals."},
+        {q: "What is a Python dictionary?", a: "A collection of key-value pairs that is unordered and mutable."},
+        {q: "How would you handle reading a large file efficiently?", a: "Use buffered reading with iterators, read line by line, or use generators."},
+        {q: "Explain the difference between local and global variables.", a: "Local variables exist within a function scope; global variables exist across the script."}
+    ]
+};
+
+let currentRole = '';
+let currentQuestion = null;
+
+function startRole(role) {
+    currentRole = role;
+    document.getElementById('home-page').style.display = 'none';
+    document.getElementById('practice-page').style.display = 'block';
+    document.getElementById('role-title').textContent = role;
+    nextQuestion();
+}
+
+function getRandomQuestion() {
+    const roleQuestions = questionsBank[currentRole];
+    const randomIndex = Math.floor(Math.random() * roleQuestions.length);
+    return roleQuestions[randomIndex];
+}
+
+function nextQuestion() {
+    currentQuestion = getRandomQuestion();
+    document.getElementById('question-box').textContent = currentQuestion.q;
+    const answerBox = document.getElementById('answer-box');
+    answerBox.style.display = 'none';
+    answerBox.textContent = currentQuestion.a;
+    document.getElementById('reveal-btn').disabled = false;
+}
+
+function revealAnswer() {
+    document.getElementById('answer-box').style.display = 'block';
+    document.getElementById('reveal-btn').disabled = true;
+}
+
+function goHome() {
+    document.getElementById('practice-page').style.display = 'none';
+    document.getElementById('home-page').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
