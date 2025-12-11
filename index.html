@@ -51,12 +51,20 @@
 <body>
 <div class="container" id="home-page">
     <h1>Welcome to the Interview Practice Tool!</h1>
+    <h2>Select a Practice Type:</h2>
+    <button onclick="selectPractice('technical')">Technical Questions</button>
+    <button onclick="selectPractice('behavioral')">Behavioral Questions</button>
+</div>
+
+<div class="container" id="role-selection-page" style="display:none;">
+    <h2 id="practice-type-title"></h2>
     <h2>Select a Role:</h2>
     <button onclick="startRole('IT Support Analyst')">IT Support Analyst</button>
     <button onclick="startRole('Junior QA Analyst')">Junior QA Analyst</button>
     <button onclick="startRole('Junior Cybersecurity Analyst')">Junior Cybersecurity Analyst</button>
     <button onclick="startRole('Junior Data Analyst')">Junior Data Analyst</button>
     <button onclick="startRole('Junior Software Developer')">Junior Software Developer</button>
+    <button onclick="goHome()">Home</button>
 </div>
 
 <div class="container" id="practice-page" style="display:none;">
@@ -182,19 +190,71 @@ const questionsBank = {
     ]
 };
 
+const behavioralQuestionsBank = {
+    "IT Support Analyst": [
+        {q: "An urgent incident just came up and it's all hands on-deck. However, you have a deliverable with a hard deadline for end of day. What do you do?", a: "Communicate with your manager and team, prioritize tasks, see if deliverable can be delegated or adjusted, and participate in the incident appropriately."},
+        {q: "A user is frustrated and yelling about their computer not working. How do you respond?", a: "Stay calm, listen actively, empathize, and guide them through troubleshooting professionally."},
+        {q: "You notice a coworker repeatedly violating IT security policy. What would you do?", a: "Follow company reporting protocols, inform supervisor or security team, and avoid confronting unprofessionally."},
+        {q: "You are assigned multiple tickets with conflicting deadlines. How do you handle it?", a: "Prioritize based on urgency and impact, communicate with stakeholders, and manage time efficiently."},
+        {q: "You receive a task you don't know how to complete. How do you proceed?", a: "Research, ask colleagues or documentation, escalate if needed, and ensure you complete it correctly and on time."},
+        {q: "You realize you made a mistake that could impact users. What do you do?", a: "Acknowledge the mistake immediately, communicate to relevant parties, and take corrective actions."},
+        {q: "A project requires knowledge you don't have. How would you contribute?", a: "Learn quickly using resources, ask for guidance, and contribute in areas where you can add value."},
+        {q: "Your manager gives you vague instructions for a task. How do you handle it?", a: "Clarify objectives, ask targeted questions, and confirm expectations before proceeding."},
+        {q: "You are asked to stay late to fix a critical issue but had personal plans. How do you respond?", a: "Assess urgency, communicate availability, prioritize work responsibilities, and offer alternatives if needed."},
+        {q: "Two users have conflicting needs for IT support at the same time. How do you handle it?", a: "Assess severity and impact, communicate transparently, prioritize based on business needs, and manage expectations."}
+    ],
+    "Junior QA Analyst": [
+        {q: "You find a bug just before a major release. How do you handle it?", a: "Document the bug, communicate urgency to the team, suggest solutions, and help test the fix."},
+        {q: "You receive feedback from a developer that your test case is unnecessary. How do you respond?", a: "Listen carefully, explain reasoning with evidence, and adjust tests if appropriate."},
+        {q: "Your testing deadlines are tight, and a critical feature is incomplete. How do you proceed?", a: "Communicate risks to stakeholders, prioritize testing on completed critical features, and plan additional testing."},
+        {q: "A stakeholder requests a last-minute change to test coverage. How do you respond?", a: "Evaluate impact, communicate resource needs, and adjust plan if feasible or negotiate alternatives."},
+        {q: "You notice inconsistent testing results. What steps do you take?", a: "Investigate environment, data, and test scripts, replicate consistently, and document findings."}
+    ],
+    "Junior Cybersecurity Analyst": [
+        {q: "A critical vulnerability is reported, but you are not sure of the impact. What do you do?", a: "Assess risk, escalate to senior security staff, communicate to stakeholders, and monitor until resolved."},
+        {q: "You detect unusual activity on a colleague’s account. How do you respond?", a: "Follow incident response procedures, avoid direct confrontation, escalate to security team, and document findings."},
+        {q: "You are asked to implement security controls that you haven’t done before. What steps do you take?", a: "Research best practices, consult documentation, seek guidance, and implement carefully with supervision."},
+        {q: "Your team disagrees on the priority of a security patch. How do you proceed?", a: "Discuss rationale, refer to risk assessments, and escalate decision if necessary."},
+        {q: "You accidentally delete a log file that may be needed for an investigation. What do you do?", a: "Report immediately, attempt recovery if possible, document actions, and prevent future mistakes."}
+    ],
+    "Junior Data Analyst": [
+        {q: "You are given a dataset with unclear instructions. How do you proceed?", a: "Clarify objectives with stakeholders, explore data to understand structure, and document assumptions."},
+        {q: "A manager asks for analysis results urgently but the data is incomplete. What do you do?", a: "Communicate limitations, provide partial insights if possible, and continue to gather complete data."},
+        {q: "You notice your report has an error after sending to stakeholders. How do you handle it?", a: "Acknowledge immediately, correct the report, and communicate updates clearly."},
+        {q: "Multiple stakeholders request different analyses at the same time. How do you prioritize?", a: "Assess business impact, deadlines, and resources, communicate priorities, and manage expectations."},
+        {q: "You discover your dataset has confidential information. How do you handle it?", a: "Follow data privacy protocols, limit access, and anonymize data if sharing."}
+    ],
+    "Junior Software Developer": [
+        {q: "You are assigned a feature you’ve never implemented before. How do you proceed?", a: "Research, experiment in a sandbox, seek mentorship, and implement with incremental testing."},
+        {q: "You find a bug after your code is deployed to production. What do you do?", a: "Assess severity, communicate to team, deploy hotfix if critical, and document cause and resolution."},
+        {q: "A colleague criticizes your code publicly. How do you respond?", a: "Stay professional, listen carefully, understand the feedback, and improve your code accordingly."},
+        {q: "You are asked to meet a tight deadline but quality may be impacted. How do you handle it?", a: "Communicate risks, suggest alternatives, prioritize critical functionality, and ensure testing."},
+        {q: "You receive conflicting requirements from two stakeholders. What steps do you take?", a: "Clarify requirements, communicate conflicts, propose consensus or compromise, and document decisions."}
+    ]
+};
+
+let currentPracticeType = 'technical';
 let currentRole = '';
 let currentQuestion = null;
 
+function selectPractice(type) {
+    currentPracticeType = type;
+    document.getElementById('home-page').style.display = 'none';
+    document.getElementById('role-selection-page').style.display = 'block';
+    document.getElementById('practice-type-title').textContent = type === 'technical' ? "Technical Questions" : "Behavioral Questions";
+}
+
 function startRole(role) {
     currentRole = role;
-    document.getElementById('home-page').style.display = 'none';
+    document.getElementById('role-selection-page').style.display = 'none';
     document.getElementById('practice-page').style.display = 'block';
     document.getElementById('role-title').textContent = role;
     nextQuestion();
 }
 
 function getRandomQuestion() {
-    const roleQuestions = questionsBank[currentRole];
+    const bank = currentPracticeType === 'technical' ? technicalQuestionsBank : behavioralQuestionsBank;
+    const roleQuestions = bank[currentRole];
     const randomIndex = Math.floor(Math.random() * roleQuestions.length);
     return roleQuestions[randomIndex];
 }
@@ -215,9 +275,9 @@ function revealAnswer() {
 
 function goHome() {
     document.getElementById('practice-page').style.display = 'none';
+    document.getElementById('role-selection-page').style.display = 'none';
     document.getElementById('home-page').style.display = 'block';
 }
 </script>
-
 </body>
 </html>
