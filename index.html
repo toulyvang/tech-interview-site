@@ -77,7 +77,8 @@
 </div>
 
 <script>
-const questionsBank = {
+// Technical question bank
+const technicalQuestionsBank = {
     "IT Support Analyst": [
         {q: "A user cannot connect to Wi-Fi. How would you troubleshoot?", a: "Check if Wi-Fi is enabled, verify SSID and password, ping router, check IP conflicts, and ensure drivers are up to date."},
         {q: "A user's computer is running very slowly. How would you troubleshoot?", a: "Check Task Manager for high CPU/memory usage, disk space, malware, updates, and consider rebooting."},
@@ -88,7 +89,7 @@ const questionsBank = {
         {q: "What is the purpose of Active Directory?", a: "To manage users, computers, and permissions in a network with centralized authentication."},
         {q: "Explain the difference between static and dynamic IP addresses.", a: "Static IP is manually set and constant; dynamic IP is assigned by DHCP and can change."},
         {q: "A user cannot access a shared folder. How do you resolve it?", a: "Check network connectivity, permissions, folder existence, and drive mapping."},
-        {q: "What is the difference between a domain and a workgroup?", a: "A domain has centralized management with a server; a workgroup is peer-to-peer with no central control."},
+        {q: "Explain the difference between a domain and a workgroup.", a: "A domain has centralized management with a server; a workgroup is peer-to-peer with no central control."},
         {q: "Explain what a VPN is and why it is used.", a: "A VPN creates a secure, encrypted connection over the internet, often to access a corporate network remotely."},
         {q: "How would you troubleshoot a frozen application?", a: "Use Task Manager to end process, check for updates, restart the app, and investigate logs."},
         {q: "Explain the difference between a hub, switch, and router.", a: "Hub broadcasts to all ports, switch sends to specific devices, router connects networks and directs traffic."},
@@ -143,67 +144,19 @@ const questionsBank = {
         {q: "How do you respond to a ransomware attack?", a: "Isolate affected systems, do not pay ransom, restore from backups, investigate entry point, strengthen defenses."},
         {q: "Explain what a security incident response plan is.", a: "A documented process to detect, respond to, and recover from security incidents."},
         {q: "How would you safely handle a suspected malware email attachment?", a: "Do not open, quarantine, scan in sandbox, report to IT/security team."}
-    ],
-    "Junior Data Analyst": [
-        {q: "A dataset contains missing values in key columns. How would you handle this?", a: "Identify missing values, decide whether to remove rows, fill in missing values, or use predictive imputation."},
-        {q: "What is the difference between INNER JOIN and LEFT JOIN in SQL?", a: "INNER JOIN returns only matching rows; LEFT JOIN returns all rows from left table and matches from right table."},
-        {q: "Explain the difference between primary key and foreign key.", a: "Primary key uniquely identifies records; foreign key links to a primary key in another table."},
-        {q: "A chart shows unexpected outliers. How would you investigate?", a: "Check raw data for input errors, verify transformations, decide whether to keep or remove outliers."},
-        {q: "Explain the difference between structured and unstructured data.", a: "Structured data is organized in tables; unstructured data has no predefined format like images or emails."},
-        {q: "How would you merge two datasets with different column names?", a: "Rename columns to match, check data types, handle duplicates, and merge using SQL or Excel/Python functions."},
-        {q: "In Excel, what is the difference between VLOOKUP and INDEX-MATCH?", a: "VLOOKUP looks in the first column only; INDEX-MATCH can look in any column and is more flexible."},
-        {q: "A report shows inconsistent numbers compared to the source database. How would you troubleshoot?", a: "Verify extraction queries, check filters/formulas, confirm data freshness, reconcile differences."},
-        {q: "What is the difference between COUNT(*) and COUNT(column_name) in SQL?", a: "COUNT(*) counts all rows; COUNT(column_name) counts only non-NULL values."},
-        {q: "Explain how you would test data quality.", a: "Check for missing, duplicate, or inconsistent values, validate data against sources, and run sanity checks."},
-        {q: "How would you prioritize which data to clean first?", a: "Focus on critical business metrics, high-impact columns, and most-used datasets first."},
-        {q: "How do you handle categorical variables in analysis?", a: "Use encoding methods such as one-hot encoding or label encoding for models or analysis."},
-        {q: "Explain what a pivot table is.", a: "A pivot table summarizes and aggregates data in a table for easy analysis."},
-        {q: "A dataset is very large and slow to process. What do you do?", a: "Filter unnecessary columns, aggregate data first, use efficient queries or tools like SQL/Pandas."},
-        {q: "Explain the difference between correlation and causation.", a: "Correlation shows a relationship between variables; causation indicates one variable causes change in another."},
-        {q: "How would you detect duplicate records in a dataset?", a: "Check for repeated rows or unique key duplication using SQL DISTINCT or data cleaning functions."},
-        {q: "Explain the difference between qualitative and quantitative data.", a: "Qualitative is descriptive (text, categories); quantitative is numerical (counts, measurements)."},
-        {q: "How would you visualize categorical vs numerical data?", a: "Use bar charts, histograms, or box plots depending on the comparison."},
-        {q: "A dataset contains inconsistent date formats. How would you fix it?", a: "Convert dates to a standard format using Excel functions, SQL date functions, or Python date parsing."},
-        {q: "How do you validate data imported from a third-party source?", a: "Compare with known values, check for completeness, consistency, and expected ranges."}
-    ],
-    "Junior Software Developer": [
-        {q: "What is the difference between Python and CPython?", a: "Python is the language; CPython is the standard implementation that runs Python code."},
-        {q: "Explain the difference between == and is in Python.", a: "== checks value equality; is checks if objects reference the same memory location."},
-        {q: "What is the difference between a list, tuple, and set?", a: "List: mutable, ordered; Tuple: immutable, ordered; Set: mutable, unordered, unique elements."},
-        {q: "Explain what a Python module or package is.", a: "A module is a single Python file with code; a package is a directory containing modules and an __init__.py."},
-        {q: "What is the difference between a for loop and list comprehension?", a: "For loops iterate and can perform complex actions; list comprehension creates a new list concisely."},
-        {q: "Explain what an API is.", a: "An API is a set of rules that allows applications to communicate, often to request or send data."},
-        {q: "What is the difference between Python 2 and Python 3?", a: "Python 3 has improved syntax, print function, Unicode support; Python 2 is legacy and no longer supported."},
-        {q: "What is the difference between mutable and immutable objects?", a: "Mutable objects (list, dict) can be changed; immutable objects (tuple, string) cannot be altered."},
-        {q: "Explain what exception handling is.", a: "Using try/except blocks to catch and handle runtime errors gracefully."},
-        {q: "What is the difference between shallow and deep copy?", a: "Shallow copy copies references of objects; deep copy duplicates objects recursively."},
-        {q: "Explain what a decorator is in Python.", a: "A function that modifies another function’s behavior without changing its code."},
-        {q: "How would you test a function you wrote?", a: "Write unit tests with different inputs, check outputs, edge cases, and handle exceptions."},
-        {q: "Explain the difference between *args and **kwargs.", a: "*args passes variable positional arguments; **kwargs passes variable keyword arguments."},
-        {q: "What is the difference between a Python list and a NumPy array?", a: "NumPy arrays are optimized for numerical operations and support vectorized calculations; lists are general-purpose containers."},
-        {q: "How would you reverse a string in Python?", a: "Use slicing s[::-1] or the reversed() function with join()."},
-        {q: "Explain the difference between Python's pass by value vs pass by reference.", a: "Python uses pass by assignment; mutable objects can change in functions, immutable cannot."},
-        {q: "How would you remove duplicates from a list?", a: "Convert to a set and back to list, or use dict.fromkeys(), or loop with conditionals."},
-        {q: "What is a Python dictionary?", a: "A collection of key-value pairs that is unordered and mutable."},
-        {q: "How would you handle reading a large file efficiently?", a: "Use buffered reading with iterators, read line by line, or use generators."},
-        {q: "Explain the difference between local and global variables.", a: "Local variables exist within a function scope; global variables exist across the script."}
     ]
 };
 
+// Behavioral question bank (examples; can extend for all roles)
 const behavioralQuestionsBank = {
     "IT Support Analyst": [
         {q: "An urgent incident just came up and it's all hands on-deck. However, you have a deliverable with a hard deadline for end of day. What do you do?", a: "Communicate with your manager and team, prioritize tasks, see if deliverable can be delegated or adjusted, and participate in the incident appropriately."},
         {q: "A user is frustrated and yelling about their computer not working. How do you respond?", a: "Stay calm, listen actively, empathize, and guide them through troubleshooting professionally."},
         {q: "You notice a coworker repeatedly violating IT security policy. What would you do?", a: "Follow company reporting protocols, inform supervisor or security team, and avoid confronting unprofessionally."},
         {q: "You are assigned multiple tickets with conflicting deadlines. How do you handle it?", a: "Prioritize based on urgency and impact, communicate with stakeholders, and manage time efficiently."},
-        {q: "You receive a task you don't know how to complete. How do you proceed?", a: "Research, ask colleagues or documentation, escalate if needed, and ensure you complete it correctly and on time."},
-        {q: "You realize you made a mistake that could impact users. What do you do?", a: "Acknowledge the mistake immediately, communicate to relevant parties, and take corrective actions."},
-        {q: "A project requires knowledge you don't have. How would you contribute?", a: "Learn quickly using resources, ask for guidance, and contribute in areas where you can add value."},
-        {q: "Your manager gives you vague instructions for a task. How do you handle it?", a: "Clarify objectives, ask targeted questions, and confirm expectations before proceeding."},
-        {q: "You are asked to stay late to fix a critical issue but had personal plans. How do you respond?", a: "Assess urgency, communicate availability, prioritize work responsibilities, and offer alternatives if needed."},
-        {q: "Two users have conflicting needs for IT support at the same time. How do you handle it?", a: "Assess severity and impact, communicate transparently, prioritize based on business needs, and manage expectations."}
+        {q: "You receive a task you don't know how to complete. How do you proceed?", a: "Research, ask colleagues or documentation, escalate if needed, and ensure you complete it correctly and on time."}
     ],
-    "Junior QA Analyst": [
+        "Junior QA Analyst": [
         {q: "You find a bug just before a major release. How do you handle it?", a: "Document the bug, communicate urgency to the team, suggest solutions, and help test the fix."},
         {q: "You receive feedback from a developer that your test case is unnecessary. How do you respond?", a: "Listen carefully, explain reasoning with evidence, and adjust tests if appropriate."},
         {q: "Your testing deadlines are tight, and a critical feature is incomplete. How do you proceed?", a: "Communicate risks to stakeholders, prioritize testing on completed critical features, and plan additional testing."},
